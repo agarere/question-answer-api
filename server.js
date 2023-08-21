@@ -1,11 +1,15 @@
 const express = require('express');
 const routers = require('./routers');
+const connectDatabase = require('./helpers/database/ConnectDatabase');
 
 // Environment variables
 const dotenv = require('dotenv');
 dotenv.config({
   path: './config/env/config.env'
 })
+
+// MongoDB Connection
+connectDatabase();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
