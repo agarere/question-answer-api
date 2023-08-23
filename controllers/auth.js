@@ -4,7 +4,7 @@ const register = async (req, res, next) => {
   const name = "Ediz Ağarer"
   const email = "edizagarer@gmail.com"
   const password = "123456"
-
+  // todo:
   const user = await User.create({
     name,
     email,
