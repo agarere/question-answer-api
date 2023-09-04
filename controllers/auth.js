@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const CustomError = require('../helpers/error/CustomError');
 const asyncErrorWrapper = require('express-async-handler');
+const { sendJwtToClient } = require('../helpers/authorization/TokenHelper');
 
 const register = asyncErrorWrapper(async (req, res, next) => {
   
@@ -13,10 +14,15 @@ const register = asyncErrorWrapper(async (req, res, next) => {
     role
   })
 
-  res.status(200).json({
-    success: true,
-    data: user
-  })
+  // const token = user.generateJwtFromUser();
+  // console.log(token)
+
+  // res.status(200).json({
+  //   success: true,
+  //   data: user
+  // })
+
+  sendJwtToClient(user, res)
 });
 
 const errorTest = (req, res, next) => {
@@ -29,7 +35,15 @@ const errorTest = (req, res, next) => {
   return next(new TypeError("Type Error"))
 }
 
+const tokenTest = (req, res, next) => {
+  res.json({
+    success: true,
+    message: "Welcome"
+  })
+}
+
 module.exports = {
   register,
-  errorTest
+  errorTest,
+  tokenTest
 }
