@@ -35,15 +35,27 @@ const errorTest = (req, res, next) => {
   return next(new TypeError("Type Error"))
 }
 
-const tokenTest = (req, res, next) => {
+const getUser = (req, res, next) => {
   res.json({
     success: true,
-    message: "Welcome"
+    data: {
+      id: req.user.id,
+      name: req.user.name
+    }
   })
 }
+
+const login = asyncErrorWrapper(async (req, res, next) => {
+  res
+    .status(200)
+    .json({
+      success: true
+    })
+})
 
 module.exports = {
   register,
   errorTest,
-  tokenTest
+  getUser,
+  login
 }
