@@ -1,7 +1,12 @@
 const User = require('../models/User');
+const Token = require('../models/Token');
 const CustomError = require('../helpers/error/CustomError');
 const asyncErrorWrapper = require('express-async-handler');
-const { sendJwtToClient } = require('../helpers/authorization/TokenHelper');
+const {
+  sendJwtToClient,
+  isTokenIncluded,
+  getAccessTokenFromHeader } = require('../helpers/authorization/TokenHelper');
+
 const { validateUserInput, comparePassword } = require('../helpers/input/InputHelpers');
 
 const register = asyncErrorWrapper(async (req, res, next) => {
@@ -62,6 +67,17 @@ const login = asyncErrorWrapper(async (req, res, next) => {
 
 const logout = asyncErrorWrapper(async (req, res, next) => {
   const {NODE_ENV} = process.env
+
+  if (!isTokenIncluded(req)) {
+    return next(new CustomError("You are not authorized to access this route", 401));
+  }
+
+  // todo: try - catch
+  const accessToken = getAccessTokenFromHeader(req);
+  const isToken = await Token.findOne({ token: accessToken })
+  if (isToken) {
+    const deleted = await Token.deleteOne({ token: accessToken})
+  }
 
   return res.status(200).cookie({
     httpOnly: true,

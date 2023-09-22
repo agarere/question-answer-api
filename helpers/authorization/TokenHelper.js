@@ -1,17 +1,27 @@
-const sendJwtToClient = (user, res) => {
+const Token = require('../../models/Token');
+
+const sendJwtToClient = async (user, res) => {
 
   const token = user.generateJwtFromUser();
 
   const { JWT_COOKIE_EXPIRE, NODE_ENV } = process.env
 
+  const expireAt = new Date(Date.now() + parseInt(JWT_COOKIE_EXPIRE) * 1000)
+
+  const createdToken = await Token.create({
+    token,
+    expireAt
+  })
+
   return res.status(200).cookie("access_token", token, {
     httpOnly: true,
-    expires: new Date(Date.now() + parseInt(JWT_COOKIE_EXPIRE) * 1000),
+    expires: expireAt,
     secure: NODE_ENV === "development" ? false : true
   })
   .json({
     success: true,
     access_token: token,
+    createdToken,
     data: {
       name: user.name,
       email: user.email
