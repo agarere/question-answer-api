@@ -20,7 +20,7 @@ const getAccessToRoute = async (req, res, next) => {
 
   const isToken = await Token.findOne({ token: accessToken })
   if (!isToken) {
-    console.log('token not found!, token:', token)
+    console.log('token not found!, token:', accessToken)
     return next(new CustomError("You are not authorized to access this route", 401))
   }
 
