@@ -74,10 +74,7 @@ const logout = asyncErrorWrapper(async (req, res, next) => {
 
   // todo: try - catch
   const accessToken = getAccessTokenFromHeader(req);
-  const isToken = await Token.findOne({ token: accessToken })
-  if (isToken) {
-    const deleted = await Token.deleteOne({ token: accessToken})
-  }
+  const isToken = await Token.findOneAndDelete({ token: accessToken })
 
   return res.status(200).cookie({
     httpOnly: true,
