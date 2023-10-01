@@ -36,3 +36,5 @@ lerna-debug.log*
 
 .sqlite
 db.sqlite
+/db.sqlite
+/*.sqlite
