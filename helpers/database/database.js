@@ -1,19 +1,38 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'db.sqlite'
-});
+})
 
 const Question = sequelize.define('Question', {
   title: DataTypes.STRING,
   content: DataTypes.STRING,
-});
+})
+
+const Tutorial = sequelize.define('tutorial', {
+  title: DataTypes.STRING,
+  content: DataTypes.STRING,
+})
+
+const Comment = sequelize.define('comment', {
+  name: DataTypes.STRING,
+  text: DataTypes.STRING,
+  tutorialId: DataTypes.BIGINT
+})
+
+Tutorial.hasMany(Comment, { as: "comments" });
+Comment.belongsTo(Tutorial, {
+  foreignKey: "tutorialId",
+  as: "tutorial",
+})
 
 sequelize.sync()
 
 module.exports = {
-  Question
+  Question,
+  Tutorial,
+  Comment
 }
 
 // var sqlite3 = require('sqlite3').verbose()
